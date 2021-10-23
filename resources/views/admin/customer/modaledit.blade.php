@@ -1,7 +1,7 @@
 <div class="modal fade" id="EditCustomer{{$stt}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-    <form action="{{url('/customer/update/'.$ctm['id'])}}" method="post">
+    <form action="{{url('/customer/update/'.$ctm['id'])}}" method="post" enctype="multipart/form-data">
     @csrf
       <div class="modal-header bg-success" style="color:#fff;">
         <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-user-edit"></i> Sửa khách hàng</h5>

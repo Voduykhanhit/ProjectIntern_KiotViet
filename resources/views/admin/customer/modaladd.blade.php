@@ -11,11 +11,7 @@
       </div>
       <div class="modal-body">
             <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="code">Mã khách hàng</label>
-                    <input type="text" class="form-control" id="code" name="code" placeholder="Nhập mã khách hàng">
-                    </div>
-                    <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label for="name">Tên khách hàng</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên khách hàng">
                 </div>
@@ -41,6 +37,10 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="FILE">Chọn ảnh đại diện(Nếu muốn)</label>
+                <input type="file" name="txtImg" class="form-control" id="FILE">
+            </div>
+            <div class="form-group">
                 <label for="">Giới tính</label>
                 <div class="form-check">
                     <input class="form-check-input" name="gender" type="radio" id="gridCheck1" value="true">
@@ -63,7 +63,6 @@
                 <label for="comments">Ghi chú</label>
                 <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
             </div>
-
             <div class="form-group">
                 <label for="branchId">Chọn chi nhánh</label>
                 <select class="form-control" id="branchId" name="branchId">

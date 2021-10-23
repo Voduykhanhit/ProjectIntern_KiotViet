@@ -39,6 +39,7 @@
                         <input type="text" class="form-control" id="ContactNumber" name="ContactNumber" value="@if(isset($details['orderDelivery']['contactNumber'])) {{$details['orderDelivery']['contactNumber']}} @endif">
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="Address">Địa chỉ nhận</label>
                 <input type="text" class="form-control" id="Address" name="Address" value="@if(isset($details['orderDelivery']['address'])) {{$details['orderDelivery']['address']}} @endif">      
@@ -92,18 +93,41 @@
                 <div class="form-group col-md-12">
                 <label for="exampleFormControlSelect2">Sản phẩm</label>
                     <select multiple class="form-control" name="ProductId[]" id="ProductId">
-                    @foreach($product as $pd)
-                        @if(isset($details['orderDetails']))
-                            @foreach($details['orderDetails'] as $od)
-                               <option @if($od['productId'] == $pd['id']) selected @endif  value="{{$pd['id']}}">{{$pd['name']}}</option>
-                            @endforeach
-
-                        @endif
-                       
-                   @endforeach
-                       
+                        @foreach($product as $pd)
+                            @if(isset($details['orderDetails']))
+                                @foreach($details['orderDetails'] as $od)
+                                <option @if($od['productId'] == $pd['id']) selected @endif  value="{{$pd['id']}}">{{$pd['name']}}</option>
+                                @endforeach
+                            @endif
+                        @endforeach
                     </select>
                 </div>
+            </div>
+            <div class="form-group">
+                <label for="">Sản phẩm đã chọn mua:</label>
+                    @foreach($product as $pd)
+                        @if(isset($details['orderDetails']))
+                            @foreach($details['orderDetails'] as $dt)
+                                @if($pd['id']==$dt['productId'])
+                                    @php
+                                        if(isset($pd['images'])){
+                                            foreach($pd['images'] as $img)
+                                            {
+                                                for($i=0; $i < 1 ; $i++)
+                                                {
+                                                    $urlimg = $img;
+                                                }
+                                            }
+                                            }else{
+                                                $urlimg = '';
+                                            } 
+                                    @endphp
+                                    <img src="{{$urlimg}}" alt="" style="width:60px;">
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+               
             </div>
             <div class="form-row">
                 <div class="form-group col-md-12">
@@ -112,12 +136,11 @@
                         @if(isset($details['orderDetails']))
                             @foreach($details['orderDetails'] as $dt)
                                 @php $stt++; @endphp
-                                <label for="Quantity">Sản phẩm {{$stt}}</label><br>
+                                <label for="Quantity">{{$stt}}: {{$dt['productName']}}</label><br>
                                 <input type="number"  class="form-control" name="Quantity[]" id="Quantity" min="1" max="50" value="@if(isset($dt['quantity'])){{$dt['quantity']}}@endif">
                             @endforeach
                         @endif
                 </div>
-                
             </div>
             <div class="form-group">
             @php

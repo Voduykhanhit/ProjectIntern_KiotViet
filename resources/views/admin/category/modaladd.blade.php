@@ -16,7 +16,6 @@
                 <input type="hidden" class="form-control" id="retailerId" name="retailerId" aria-describedby="emailHelp" value="{{$retailerid}}">
             </div>
         </div>
-       
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
             <button  type="submit" class="btn btn-success"><i class="far fa-save"></i> Lưu</button>

@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use App\Proviences;
-use App\Districts;
-use App\Wards;
 
 class ProductController extends Controller
 {
@@ -21,11 +18,9 @@ class ProductController extends Controller
                 'Authorization' =>'Bearer '.$access_token,
                 'Accept' => 'application/json',
             ])->get('https://public.kiotapi.com/products');
-            
             $product = $response->json()['data'];
-           
             return view('admin.product.productlist',compact('product'));
-        }catch(Exception $e)
+        }catch(\Exception $e)
         {
             echo "Cửa hàng đã hết thời gian sử dụng";
         }

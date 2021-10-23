@@ -21,6 +21,13 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
+                        @if(count($errors)>0)
+                            <div class="alert alert-danger" id="alert">
+                                @foreach($errors->All() as $err)
+                                {{$err}}
+                                @endforeach
+                            </div>
+                        @endif
                         @if(Session('thongbao'))
                             <div class="alert alert-success mt-2" id="alert">
                                 {{Session('thongbao')}}
@@ -31,44 +38,7 @@
                                 {{Session('error')}}
                             </div>
                         @endif
-                        <div class="row mt-2">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Total Category <span class="badge badge-pill badge-light"></span></div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="{{url('admin/category/list-category')}}">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">Total Product <span class="badge badge-pill badge-light"></span> </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="{{url('admin/product/list-product')}}">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">Total Tracking <span class="badge badge-pill badge-light"></span></div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="{{url('admin/tracking/list-tracking')}}">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Total Request <span class="badge badge-pill badge-light"></span></div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="{{url('admin/request/list-request')}}">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                         @yield('content')
                         <!-- <div class="row">
                             <div class="col-xl-6">
@@ -116,21 +86,12 @@
                 },10000);
             });
         </script>
-       
-        <script>
-        function TinhTien(){
-            $phivanchuyen = document.getElementById('Price').value;
-            $giatest = document.getElementById('Quantity').value;
-            $tinhtong = $phivanchuyen*$giatest;
-            document.getElementById('PriceOrder').value = $tinhtong;
-        }
-    </script>
             <script>
-            function Xoa()
-            {
-                var conf = confirm("Bạn có chắc muốn xóa danh mục này hay không");
-                return conf;
-            }
+                function Xoa()
+                {
+                    var conf = confirm("Bạn có chắc muốn xóa danh mục đã lựa chọn hay không!!!");
+                    return conf;
+                }
             </script>
 
        

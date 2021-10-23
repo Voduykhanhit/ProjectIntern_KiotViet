@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Input;
+use App\Services\ImgurService;
 use Str;
 class CustomerController extends Controller
 {
@@ -39,9 +40,9 @@ class CustomerController extends Controller
             {
                 
                 $customer = $response->json()['data'];
+               
               
                 $ShowBranches = $Branches->json()['data'];
-                
                 
                 return view('admin.customer.listcustomer',compact('customer','ShowBranches'));
             }else{
@@ -50,7 +51,7 @@ class CustomerController extends Controller
            
            
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
             echo "Cửa hàng hết thời hạn sử dụng";
         }
@@ -89,27 +90,56 @@ class CustomerController extends Controller
             
             $access_token = fopen("../storage/app/public/access_token.txt","r");
             $access_token = fgets($access_token);
-           
-           
-            $response = Http::withHeaders([
-                'Retailer' => $retailer,
-                'Authorization'=>'Bearer '.$access_token,
-            ])->post('https://public.kiotapi.com/customers/', [
-                'code'=>$request->code,
-                'name'=>$request->name,
-                'gender'=>$request->gender,
-                'birthDate'=>$request->birthDate,
-                'contactNumber'=>$request->contactNumber,
-                'address'=>$request->address,
-                'locationName'=>$request->locationName,
-                'email'=>$request->email,
-                'comments'=>$request->comments,
-                'branchId'=>$request->branchId,
-                
-            ]);
+            if($request->hasFile('txtImg'))
+            {
+                $image = $request->file('txtImg');
+                $tailimg = $image->getClientOriginalExtension();
+                if($tailimg !='jpg' && $tailimg !='jpeg' && $tailimg !='png')
+                {
+                    return redirect()->back()->with('error','Định dạng hình phải có đuôi là JPG hoặc JPEG hoặc PNG!!!');
+                }else{
+                    $imageUrl = ImgurService::uploadImage($image->getRealPath());
+                   
+                    $response = Http::withHeaders([
+                        'Retailer' => $retailer,
+                        'Authorization'=>'Bearer '.$access_token,
+                    ])->post('https://public.kiotapi.com/customers/', [
+                        
+                        'name'=>$request->name,
+                        'gender'=>$request->gender,
+                        'birthDate'=>$request->birthDate,
+                        'contactNumber'=>$request->contactNumber,
+                        'address'=>$request->address,
+                        'locationName'=>$request->locationName,
+                        'email'=>$request->email,
+                        'comments'=>$request->comments,
+                        'branchId'=>$request->branchId,
+                        'avatar'=>$imageUrl->data->link,  
+                    ]);
+                }
+                 
+            }
+            else
+            {
+                $response = Http::withHeaders([
+                    'Retailer' => $retailer,
+                    'Authorization'=>'Bearer '.$access_token,
+                ])->post('https://public.kiotapi.com/customers/', [
+                    
+                    'name'=>$request->name,
+                    'gender'=>$request->gender,
+                    'birthDate'=>$request->birthDate,
+                    'contactNumber'=>$request->contactNumber,
+                    'address'=>$request->address,
+                    'locationName'=>$request->locationName,
+                    'email'=>$request->email,
+                    'comments'=>$request->comments,
+                    'branchId'=>$request->branchId,  
+                ]);
+            }
             $data = $response->json();
-        
             $checkstatus = $response->status();
+           
             if($checkstatus!=200 && isset($data['responseStatus']))
             {   
                 return redirect()->back()->with('error',$data['responseStatus']['message']);
@@ -126,8 +156,7 @@ class CustomerController extends Controller
             $access_token = fopen("../storage/app/public/access_token.txt","r");
             $access_token = fgets($access_token);
         
-
-           
+            
             $response = Http::withHeaders([
                 'Retailer' => $retailer,
                 'Authorization'=>'Bearer '.$access_token,
@@ -142,6 +171,7 @@ class CustomerController extends Controller
                 'email'=>$request->email,
                 'comments'=>$request->comments,
                 'branchId'=>$request->branchId,
+                
             ]);
             $data = $response->json();
           

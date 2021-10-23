@@ -110,6 +110,7 @@ class OrderController extends Controller
             $customer = $CustomerResponse->json()['data'];
             $branches = $BranchesResponse->json()['data'];
             $product = $ProductResponse->json()['data'];
+            
            
             return view('admin.order.orderdetails',compact('details','branches','customer','product'));
         }
@@ -123,7 +124,12 @@ class OrderController extends Controller
         $retailer = fopen("../storage/app/public/retailer.txt","r");
         $retailer  = fgets($retailer);
         //Tìm kiếm giá SP 
-        
+        $this->validate($request,[
+            'qtt'=>'required'
+        ],
+        [
+            'qtt.required'=>'Số lượng không được rổng hãy chọn sản phẩm và nhập lại!!!'
+        ]);
         foreach($request->ProductId as $pq)
         {
             $SelectPrice[] = Http::withHeaders(
@@ -140,19 +146,15 @@ class OrderController extends Controller
         
         
         $infoproduct = array();
-        //"Price"=>$request->PriceOrder
-        foreach($request->ProductId as $pd){
+        foreach($request->ProductId as $key => $pd){
             foreach($SelectPrice as $price){
                 if($price['id'] == $pd ){
-
-                
-                $infoproduct[] = array(
-                    "ProductId"=>$pd,
-                    "Quantity"=>$request->Quantity,
-                    "Price"=>$price['basePrice'],
-                    "Note"=>$request->Note,
-                    "Rank"=>0,
-                    
+                    $infoproduct[] = array(
+                        "ProductId"=>$pd,
+                        "Quantity"=>$request->qtt[$key],
+                        "Price"=>$price['basePrice'],
+                        "Note"=>$request->Note,
+                        "Rank"=>0,
                     );
             }
         }
@@ -189,7 +191,6 @@ class OrderController extends Controller
         
         $checkstatus = $response->status();
         $checkerror = $response->json();
-        
         if($checkstatus!=200 && isset($checkerror['responseStatus']))
         {
             return redirect()->back()->with('error',$checkerror['responseStatus']['message']);
@@ -249,16 +250,15 @@ class OrderController extends Controller
 
         foreach($request->ProductId as $key => $pd){
             foreach($SelectPrice as $price){
-                if($price['id'] == $pd ){
-                    
-                       
-                $infoproduct[] = array(
-                    "ProductId"=>$pd,
-                    "Quantity"=>$request->Quantity[$key],
-                    "Price"=>$price['basePrice']*$request->Quantity[$key],
-                    "Note"=>$request->Note,
-                    "Rank"=>0, 
-                    );
+                if($price['id'] == $pd )
+                {
+                    $infoproduct[] = array(
+                        "ProductId"=>$pd,
+                        "Quantity"=>$request->Quantity[$key],
+                        "Price"=>$price['basePrice'],
+                        "Note"=>$request->Note,
+                        "Rank"=>0, 
+                        );
                 }
             
         }
@@ -291,7 +291,6 @@ class OrderController extends Controller
         
         $checkstatus = $response->status();
         $checkerror = $response->json();
-            dd($checkerror);
         if($checkstatus!=200 && isset($checkerror['responseStatus']))
         {
             return redirect()->back()->with('error',$checkerror['responseStatus']['message']);
@@ -323,6 +322,6 @@ class OrderController extends Controller
         }
 
     }
-    
+   
   
 }

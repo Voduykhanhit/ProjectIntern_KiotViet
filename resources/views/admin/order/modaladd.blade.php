@@ -88,22 +88,29 @@
                     </div>
              </div>
              <div class="form-row">
-                <div class="form-group col-md-12">
-                <label for="ProductId">Chọn sản phẩm</label>
+                <div class="form-group col-md-9">
+                    <label for="ProductId">Chọn sản phẩm</label>
                     <select multiple  class="form-control chonsanpham ProductId" name="ProductId[]"  id="ProductId">
                         @foreach($product as $pd)
                             @php
-                                foreach($pd['images'] as $img)
-                                {
-                                    for($i=0; $i < 1 ; $i++)
+                                if(isset($pd['images'])){
+                                    foreach($pd['images'] as $img)
                                     {
-                                        $images = $img;
+                                        for($i=0; $i < 1 ; $i++)
+                                        {
+                                            $urlimg = $img;
+                                        }
                                     }
-                                }
+                                }else{
+                                    $urlimg = '';
+                                } 
                              @endphp
-                            <option  style="background-image:url('{{$img}}');background-repeat: no-repeat;background-size: 20px 20px;padding-left:20px;" value="{{$pd['id']}}">{{$pd['name']}} (@if(isset($pd['basePrice'])){{number_format($pd['basePrice'])}}VNĐ @endif) </option>
+                            <option  style="background-image:url('{{$urlimg}}');background-repeat: no-repeat;background-size: 20px 20px;padding-left:20px;" value="{{$pd['id']}}">{{$pd['name']}} (@if(isset($pd['basePrice'])){{number_format($pd['basePrice'])}}VNĐ @endif) </option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group col-md-3" id="inputQtt">
+                    <label for="">Số lượng</label>
                 </div>
             </div>
             <div class="form-row">
@@ -122,4 +129,5 @@
     </div>
   </div>
 </div>
+
 

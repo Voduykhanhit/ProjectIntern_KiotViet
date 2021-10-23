@@ -13,11 +13,8 @@ class CategoryController extends Controller
         try{
             $access_token = fopen("../storage/app/public/access_token.txt","r");
             $access_token = fgets($access_token);
-            
-    
             $retailer = fopen("../storage/app/public/retailer.txt","r");
             $retailer = fgets($retailer);
-    
             $response = Http::withHeaders(
                 [
                     'Retailer'=>$retailer,
@@ -25,7 +22,6 @@ class CategoryController extends Controller
                     'Accept'=>'application/json',
                 ]
             )->get('https://public.kiotapi.com/categories');
-
             $retailerid = Http::withHeaders([
                 'Retailer'=>$retailer,
                 'Authorization' =>'Bearer '.$access_token,
@@ -46,8 +42,6 @@ class CategoryController extends Controller
                     }
                   }
                  
-                    
-                
                 return view('admin.category.listcategories',compact('category','showRetailerid','retailerid'));
             }
             else
@@ -55,11 +49,10 @@ class CategoryController extends Controller
                 return redirect()->back()->with('error','Kết nối thất bại!!!');
             }
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
-            echo "Cửa hàng hết hạn sử dụng";
+         echo "Cửa hàng hết hạn sử dụng";
         }
-        
     }
     public function postCreateCategory(Request $request)
     {
@@ -142,6 +135,5 @@ class CategoryController extends Controller
         }else{
             return redirect()->back()->with('error','Xóa không thành công!!!');
         }
-
     }
 }

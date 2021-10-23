@@ -20,9 +20,56 @@ class RetailerController extends Controller
                 'Accept' => 'application/json',
             ])->get('https://public.kiotapi.com/branches');
             
-            $info = $response->json()['data'];
-            return view('admin.retailer.inforetailer',compact('info','retailer'));
-        }catch(Exception $e)
+            $category = Http::withHeaders(
+                [
+                    'Retailer'=>$retailer,
+                    'Authorization'=>'Bearer '.$access_token,
+                    'Accept'=>'application/json',
+                ]
+            )->get('https://public.kiotapi.com/categories');
+           
+
+            $product = Http::withHeaders(
+                [
+                    'Retailer'=>$retailer,
+                    'Authorization'=>'Bearer '.$access_token,
+                    'Accept'=>'application/json',
+                ]
+            )->get('https://public.kiotapi.com/products');
+            
+
+            $orders = Http::withHeaders(
+                [
+                    'Retailer'=>$retailer,
+                    'Authorization'=>'Bearer '.$access_token,
+                    'Accept'=>'application/json',
+                ]
+            )->get('https://public.kiotapi.com/orders');
+            
+            $customers = Http::withHeaders(
+                [
+                    'Retailer'=>$retailer,
+                    'Authorization'=>'Bearer '.$access_token,
+                    'Accept'=>'application/json',
+                ]
+            )->get('https://public.kiotapi.com/customers');
+            
+            
+            $checkstatus = $response->status();
+            
+            if($checkstatus == 200 && $category->status() == 200 && $product->status() == 200 && $orders->status() == 200 && $customers->status() == 200)
+            {
+                $info = $response->json()['data'];
+                $countctg = count($category->json()['data']);
+                $countpd = count($product->json()['data']);
+                $countod = count($orders->json()['data']);
+                $countctm = count($customers->json()['data']);
+                return view('admin.retailer.inforetailer',compact('info','retailer','countctg','countpd','countod','countctm'));
+            }else{
+                return redirect()->back()->with('error','Không kết nối được');
+            }
+          
+        }catch(\Exception $e)
         {
             echo "Cửa hàng đã hết thời gian sử dụng";
         }
